@@ -1,7 +1,7 @@
 CFLAGS =  -O3 -Dmain=SDL_main
 LDFLAGS = -lm  -lSDL2main -lmingw32 -lSDL2 
-SDL2_INCLUDE_DIR = "C:\SDL2-2.0.18\x86_64-w64-mingw32\include\SDL2"
-SDL2_LIBRARIES_DIR = "C:\SDL2-2.0.18\x86_64-w64-mingw32\lib"
+SDL2_INCLUDE_DIR = "..\..\SDL2-2.0.20\x86_64-w64-mingw32\include\SDL2"
+SDL2_LIBRARIES_DIR = "..\..\SDL2-2.0.20\x86_64-w64-mingw32\include\SDL2"
 INC = sdl2-light.h
 SRC = main.c sdl2-light.c
 OBJ = $(SRC:%.c=%.o)
