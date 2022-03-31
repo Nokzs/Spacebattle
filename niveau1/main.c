@@ -32,8 +32,11 @@
 */
 
 #define MISSILE_SIZE 8
-
-
+/**
+ * @brief vitesse vertical de l'ennemi
+ * 
+ */
+#define ENEMY_SPEED 2
 
 /**
  * \brief Représentation pour stocker les textures nécessaires à l'affichage graphique
@@ -41,7 +44,8 @@
 
 struct textures_s{
     SDL_Texture* background; /*!< Texture liée à l'image du fond de l'écran. */
-    /* A COMPLETER */
+    SDL_Texture* skin_ship; /*! apparence du vaisseau*/
+    SDL_Texture* skin_ennemy; /*! apparende de l'ennemi*/
 };
 
 
@@ -51,15 +55,39 @@ struct textures_s{
 
 typedef struct textures_s textures_t;
 
+/**
+ * @brief representations des entités du jeu
+ * @param x position de x par rapport au centre
+ * @param y position de y par rapport au centre du sprite
+ * @param h la  hauteur du sprite
+ * @param w la largeur du sprite 
+ * @param v la vitesse vertical du sprite 
+ */
+struct sprite_s
+{
+    /* data */
+    int x;
+    int y;
+    int h;
+    int w;
+    int v;
+};
+
+/**
+ * @brief type qui correspond aux entités du jeu
+ * 
+ */
+typedef struct sprite_s sprite_t;
+
+
 
 /**
  * \brief Représentation du monde du jeu
 */
 
 struct world_s{
-    /*
-      A COMPLETER
-     */
+    sprite_t ship;
+    sprite_t ennemi;
     
     int gameover; /*!< Champ indiquant si l'on est à la fin du jeu */
 
@@ -73,16 +101,19 @@ typedef struct world_s world_t;
 
 
 
-
-
 /**
  * \brief La fonction initialise les données du monde du jeu
  * \param world les données du monde
  */
 
+void print_sprite(sprite_t* sprite){
+    printf("X: %d \n y: %d \n h: %d \n w: %d \n v: %d",sprite->x,sprite->y,sprite->h,sprite->w,sprite->v);
+}
 
 void init_data(world_t * world){
-    
+    init_sprite(&(world->ship), SCREEN_WIDTH/2-SHIP_SIZE/2, SCREEN_HEIGHT-3*SHIP_SIZE/2, SHIP_SIZE, SHIP_SIZE, 0);
+    print_sprite(&(world->ship));
+    init_sprite(&(world->ennemi), SCREEN_WIDTH/2-SHIP_SIZE/2,SHIP_SIZE,SHIP_SIZE,SHIP_SIZE,ENEMY_SPEED);
     //on n'est pas à la fin du jeu
     world->gameover = 0;
     
@@ -120,7 +151,8 @@ int is_game_over(world_t *world){
  */
 
 void update_data(world_t *world){
-    /* A COMPLETER */
+    world->ennemi.y+= world->ennemi.v;
+    
 }
 
 
@@ -146,11 +178,41 @@ void handle_events(SDL_Event *event,world_t *world){
              //si la touche appuyée est 'D'
              if(event->key.keysym.sym == SDLK_d){
                  printf("La touche D est appuyée\n");
+                 world->ship.x+=1;
               }
+              else if (event->key.keysym.sym == SDLK_RIGHT)
+              {
+                  world->ship.x+=10;
+              }
+              else if (event->key.keysym.sym == SDLK_LEFT)
+              {
+                  world->ship.x-=10;
+              }
+              if(event->key.keysym.sym == SDLK_ESCAPE){
+                 world->gameover = 1;
+              }
+              
+              
          }
     }
 }
-
+/**
+ * @brief Fonction pour initialiser les valeurs des coordonnées d'un vaisseau
+ * 
+ * @param sprite la structure de type struct_t
+ * @param x abscisse
+ * @param y ordonnée
+ * @param w largeur
+ * @param h hauteur
+ * @param v vitesse verticale
+ */
+void init_sprite(sprite_t *sprite, int x, int y, int w, int h, int v){
+    sprite->x=x;
+    sprite->y=y;
+    sprite->w=w;
+    sprite->h=h;
+    sprite->v=v;
+}
 
 /**
  * \brief La fonction nettoie les textures
@@ -159,7 +221,8 @@ void handle_events(SDL_Event *event,world_t *world){
 
 void clean_textures(textures_t *textures){
     clean_texture(textures->background);
-    /* A COMPLETER */
+    clean_texture(textures->skin_ship);
+    clean_texture(textures->skin_ennemy);
 }
 
 
@@ -173,11 +236,22 @@ void clean_textures(textures_t *textures){
 void  init_textures(SDL_Renderer *renderer, textures_t *textures){
     textures->background = load_image( "ressources/space-background.bmp",renderer);
     
-    /* A COMPLETER */
+    textures->skin_ship = load_image("ressources/spaceship.bmp",renderer);
+
+    textures->skin_ennemy = load_image("ressources/enemy.bmp",renderer);
+
+
 
     
 }
 
+void apply_sprite(SDL_Renderer* renderer, SDL_Texture* texture, sprite_t* sprite){
+    SDL_Rect dst = {0, 0, 0, 0};
+    
+    SDL_QueryTexture(texture, NULL, NULL, &dst.w, &dst.h);
+    dst.x = sprite->x; dst.y=sprite->y;
+    SDL_RenderCopy(renderer, texture, NULL, &dst);
+}
 
 /**
  * \brief La fonction applique la texture du fond sur le renderer lié à l'écran de jeu
@@ -209,7 +283,11 @@ void refresh_graphics(SDL_Renderer *renderer, world_t *world,textures_t *texture
     
     //application des textures dans le renderer
     apply_background(renderer, textures);
-    /* A COMPLETER */
+    apply_sprite(renderer,textures->skin_ship,&(world->ship));
+    apply_sprite(renderer,textures->skin_ennemy,&(world->ennemi));
+   
+
+    
     
     // on met à jour l'écran
     update_screen(renderer);

@@ -165,6 +165,7 @@ void handle_events(SDL_Event *event,world_t *world){
             if(event->key.keysym.sym == SDLK_UP){
                 world->y-=MOVING_STEP;
             }
+            
          }
          
     }
