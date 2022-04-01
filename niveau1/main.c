@@ -39,7 +39,7 @@
 /**
  * @brief vitesse verticale du missile
  */
-#define MISSILE_SPEED 10
+#define MISSILE_SPEED 2
 
 /**
  * \brief Représentation pour stocker les textures nécessaires à l'affichage graphique
@@ -66,6 +66,7 @@ typedef struct textures_s textures_t;
  * @param h la  hauteur du sprite
  * @param w la largeur du sprite 
  * @param v la vitesse vertical du sprite 
+ * 
  */
 struct sprite_s
 {
@@ -112,9 +113,6 @@ typedef struct world_s world_t;
  * \param world les données du monde
  */
 
-void print_sprite(sprite_t* sprite){
-    printf("X: %d \n y: %d \n h: %d \n w: %d \n v: %d",sprite->x,sprite->y,sprite->h,sprite->w,sprite->v);
-}
 
 void init_data(world_t * world){
     init_sprite(&(world->ship), SCREEN_WIDTH/2-SHIP_SIZE/2, SCREEN_HEIGHT-3*SHIP_SIZE/2, SHIP_SIZE, SHIP_SIZE, 0);
@@ -123,9 +121,18 @@ void init_data(world_t * world){
     init_sprite(&(world->missile),SCREEN_WIDTH/2-MISSILE_SIZE/2, SCREEN_HEIGHT-3*SHIP_SIZE/2+MISSILE_SIZE-SHIP_SIZE/2, SHIP_SIZE, SHIP_SIZE, MISSILE_SPEED);
     set_invisible(&(world->missile));
     //on n'est pas à la fin du jeu
-    world->gameover = 0;
-    
+    world->gameover = 0;    
 }
+/**
+ * @brief afficher les données d'un sprite
+ * 
+ * @param sprite le sprite examiné
+ */
+
+void print_sprite(sprite_t* sprite){
+    printf("X: %d \n y: %d \n h: %d \n w: %d \n v: %d",sprite->x,sprite->y,sprite->h,sprite->w,sprite->v);
+}
+
 
 
 /**
@@ -160,8 +167,12 @@ int is_game_over(world_t *world){
 
 void update_data(world_t *world){
     world->ennemi.y+= world->ennemi.v;
-    world->missile.x= world->ship.x+SHIP_SIZE/2-MISSILE_SIZE/2;
-    world->missile.y-= MISSILE_SPEED;
+    if(world->missile.is_visible){  
+    world->missile.y-= MISSILE_SPEED;   /*!< Si le missile est visible, c'est qu'il doit se déplacer */
+    }
+    else{
+         world->missile.x= world->ship.x+SHIP_SIZE/2-MISSILE_SIZE/2; /*!< sinon il doit être placer au dessus du vaisseau*/
+    }
 }
 
 /**
