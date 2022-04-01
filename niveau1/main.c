@@ -33,10 +33,13 @@
 
 #define MISSILE_SIZE 8
 /**
- * @brief vitesse vertical de l'ennemi
- * 
+ * @brief vitesse verticale de l'ennemi
  */
 #define ENEMY_SPEED 2
+/**
+ * @brief vitesse verticale du missile
+ */
+#define MISSILE_SPEED 10
 
 /**
  * \brief Représentation pour stocker les textures nécessaires à l'affichage graphique
@@ -46,6 +49,7 @@ struct textures_s{
     SDL_Texture* background; /*!< Texture liée à l'image du fond de l'écran. */
     SDL_Texture* skin_ship; /*! apparence du vaisseau*/
     SDL_Texture* skin_ennemy; /*! apparende de l'ennemi*/
+    SDL_Texture* missile; /*apparence du missile*/
 };
 
 
@@ -71,6 +75,7 @@ struct sprite_s
     int h;
     int w;
     int v;
+    int is_visible; 
 };
 
 /**
@@ -88,6 +93,7 @@ typedef struct sprite_s sprite_t;
 struct world_s{
     sprite_t ship;
     sprite_t ennemi;
+    sprite_t missile;
     
     int gameover; /*!< Champ indiquant si l'on est à la fin du jeu */
 
@@ -114,6 +120,8 @@ void init_data(world_t * world){
     init_sprite(&(world->ship), SCREEN_WIDTH/2-SHIP_SIZE/2, SCREEN_HEIGHT-3*SHIP_SIZE/2, SHIP_SIZE, SHIP_SIZE, 0);
     print_sprite(&(world->ship));
     init_sprite(&(world->ennemi), SCREEN_WIDTH/2-SHIP_SIZE/2,SHIP_SIZE,SHIP_SIZE,SHIP_SIZE,ENEMY_SPEED);
+    init_sprite(&(world->missile),SCREEN_WIDTH/2-MISSILE_SIZE/2, SCREEN_HEIGHT-3*SHIP_SIZE/2+MISSILE_SIZE-SHIP_SIZE/2, SHIP_SIZE, SHIP_SIZE, MISSILE_SPEED);
+    set_invisible(&(world->missile));
     //on n'est pas à la fin du jeu
     world->gameover = 0;
     
@@ -152,10 +160,27 @@ int is_game_over(world_t *world){
 
 void update_data(world_t *world){
     world->ennemi.y+= world->ennemi.v;
-    
+    world->missile.x= world->ship.x+SHIP_SIZE/2-MISSILE_SIZE/2;
+    world->missile.y-= MISSILE_SPEED;
 }
 
+/**
+ * @brief rend visible l'objet
+ * 
+ * @param sprite 
+ */
+void set_visible(sprite_t* sprite){
+    sprite->is_visible=1;
+}
 
+/**
+ * @brief rend invisible le sprite
+ * 
+ * @param sprite 
+ */
+void set_invisible(sprite_t* sprite){
+    sprite->is_visible=0;
+}
 
 /**
  * \brief La fonction gère les évènements ayant eu lieu et qui n'ont pas encore été traités
@@ -191,6 +216,9 @@ void handle_events(SDL_Event *event,world_t *world){
               if(event->key.keysym.sym == SDLK_ESCAPE){
                  world->gameover = 1;
               }
+              if(event->key.keysym.sym == SDLK_SPACE){
+                  set_visible(&(world->missile));
+              }
               
               
          }
@@ -212,6 +240,7 @@ void init_sprite(sprite_t *sprite, int x, int y, int w, int h, int v){
     sprite->w=w;
     sprite->h=h;
     sprite->v=v;
+    sprite->is_visible=1;
 }
 
 /**
@@ -223,6 +252,7 @@ void clean_textures(textures_t *textures){
     clean_texture(textures->background);
     clean_texture(textures->skin_ship);
     clean_texture(textures->skin_ennemy);
+    clean_texture(textures->missile);
 }
 
 
@@ -240,17 +270,19 @@ void  init_textures(SDL_Renderer *renderer, textures_t *textures){
 
     textures->skin_ennemy = load_image("ressources/enemy.bmp",renderer);
 
-
+    textures->missile = load_image("ressources/missile.bmp", renderer);
 
     
 }
 
 void apply_sprite(SDL_Renderer* renderer, SDL_Texture* texture, sprite_t* sprite){
-    SDL_Rect dst = {0, 0, 0, 0};
+    if(sprite->is_visible==1){
+        SDL_Rect dst = {0, 0, 0, 0};
     
-    SDL_QueryTexture(texture, NULL, NULL, &dst.w, &dst.h);
-    dst.x = sprite->x; dst.y=sprite->y;
-    SDL_RenderCopy(renderer, texture, NULL, &dst);
+        SDL_QueryTexture(texture, NULL, NULL, &dst.w, &dst.h);
+        dst.x = sprite->x; dst.y=sprite->y;
+        SDL_RenderCopy(renderer, texture, NULL, &dst);
+    }
 }
 
 /**
@@ -285,6 +317,7 @@ void refresh_graphics(SDL_Renderer *renderer, world_t *world,textures_t *texture
     apply_background(renderer, textures);
     apply_sprite(renderer,textures->skin_ship,&(world->ship));
     apply_sprite(renderer,textures->skin_ennemy,&(world->ennemi));
+    apply_sprite(renderer,textures->missile,&world->missile);
    
 
     
@@ -323,6 +356,7 @@ void init(SDL_Window **window, SDL_Renderer ** renderer, textures_t *textures, w
     init_sdl(window,renderer,SCREEN_WIDTH, SCREEN_HEIGHT);
     init_data(world);
     init_textures(*renderer,textures);
+
 }
 
 
