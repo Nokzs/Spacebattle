@@ -6,10 +6,10 @@
  * \date 18 mars 2020
  */
 
-#include "./sdl2/sdl2-light.h"
-#include "./constantes/constantes.h"
+#include "SDL2/sdl2-light.h"
 #include "SDL_data/SDL_data.h"
 #include "SDL_graphics/SDL_graphics.h"
+#include "struct/struct.h"
 
 /**
  *  \brief programme principal qui implémente la boucle du jeu

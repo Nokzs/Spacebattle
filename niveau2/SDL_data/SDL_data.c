@@ -1,6 +1,6 @@
 /**
  * \file SDL_data.c
- * \brief Constantes du jeu
+ * \brief Module de gestion des données du jeu
  * \author CHAPUSOT Alexis et ANDRE Jeffrey
  * \version 1.0
  * \date 7 AVRIL 2022
@@ -8,8 +8,7 @@
 
 
 #include "SDL_data.h"
-#include "../sdl2/sdl2-light.h"
-
+#include "../SDL2/sdl2-light.h"
 
 
 void init_data(world_t * world){
@@ -23,7 +22,7 @@ void init_data(world_t * world){
 }
 
 void print_sprite(sprite_t* sprite){
-    printf("X: %d \n y: %d \n h: %d \n w: %d \n v: %d",sprite->x,sprite->y,sprite->h,sprite->w,sprite->v);
+    printf("X: %d\ny: %d\nh: %d\nw: %d\nv: %d\n",sprite->x,sprite->y,sprite->h,sprite->w,sprite->v);
 }
 
 void clean_data(world_t *world){
@@ -100,8 +99,3 @@ void init_sprite(sprite_t *sprite, int x, int y, int w, int h, int v){
     sprite->is_visible=1;
 }
 
-void apply_background(SDL_Renderer *renderer, textures_t *textures){
-    if(textures->background != NULL){
-      apply_texture(textures->background, renderer, 0, 0);
-    }
-}

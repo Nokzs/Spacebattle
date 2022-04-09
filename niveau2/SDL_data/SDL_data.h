@@ -5,8 +5,13 @@
  * \version 1.0
  * \date 7 AVRIL 2022
  */
-#ifndef SDL_data.h
-#define SDL_data.h
+#ifndef SDL_DATA_H
+#define SDL_DATA_H
+#include "../constantes/constantes.h"
+#include "../SDL2/sdl2-light.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include "../struct/struct.h"
 
 
 /**

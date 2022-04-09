@@ -1,5 +1,12 @@
+/**
+ * \file SDL_data.c
+ * \brief Module graphique du jeu
+ * \author CHAPUSOT Alexis et ANDRE Jeffrey
+ * \version 1.0
+ * \date 7 AVRIL 2022
+ */
 #include "SDL_graphics.h"
-#include "../sdl2/sdl2-light.h"
+
 
 
 void clean_textures(textures_t *textures){
@@ -33,3 +40,33 @@ void apply_sprite(SDL_Renderer* renderer, SDL_Texture* texture, sprite_t* sprite
         SDL_RenderCopy(renderer, texture, NULL, &dst);
     }
 }
+
+void refresh_graphics(SDL_Renderer *renderer, world_t *world,textures_t *textures){
+    
+    //on vide le renderer
+    clear_renderer(renderer);
+    
+    //application des textures dans le renderer
+    apply_background(renderer, textures);
+    apply_sprite(renderer,textures->skin_ship,&(world->ship));
+    apply_sprite(renderer,textures->skin_ennemy,&(world->ennemi));
+    apply_sprite(renderer,textures->missile,&world->missile);
+   
+
+    
+    
+    // on met à jour l'écran
+    update_screen(renderer);
+}
+
+void init(SDL_Window **window, SDL_Renderer ** renderer, textures_t *textures, world_t * world){
+    init_sdl(window,renderer,SCREEN_WIDTH, SCREEN_HEIGHT);
+    init_data(world);
+    init_textures(*renderer,textures);
+}
+void apply_background(SDL_Renderer *renderer, textures_t *textures){
+    if(textures->background != NULL){
+      apply_texture(textures->background, renderer, 0, 0);
+    }
+}
+

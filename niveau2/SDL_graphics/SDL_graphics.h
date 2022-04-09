@@ -9,7 +9,9 @@
 
 #ifndef SDL_graphics
 #define SDL_graphics
-
+#include "../SDL2/sdl2-light.h"
+#include "../struct/struct.h"
+#include "../constantes/constantes.h"
 
 /**
  * \brief La fonction nettoie les textures
@@ -33,3 +35,12 @@ void  init_textures(SDL_Renderer *renderer, textures_t *textures);
 */
 
 void clean(SDL_Window *window, SDL_Renderer * renderer, textures_t *textures, world_t * world);
+
+void refresh_graphics(SDL_Renderer *renderer, world_t *world,textures_t *textures);
+
+void init(SDL_Window **window, SDL_Renderer ** renderer, textures_t *textures, world_t * world);
+
+void apply_background(SDL_Renderer *renderer, textures_t *textures);
+
+
+#endif

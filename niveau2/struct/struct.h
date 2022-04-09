@@ -1,35 +1,23 @@
-#ifndef struct
-#define struct
+#ifndef STRUCT_F
+#define STRUCT_F
 
-struct sprite_s
-{
-    /* data */
-    int x;
-    int y;
-    int h;
-    int w;
-    int v;
-    int is_visible; 
-};
-
+#include "../SDL2/sdl2-light.h"
 
 /**
  * \brief Représentation pour stocker les textures nécessaires à l'affichage graphique
 */
 
-struct textures_s{
+struct textures_s
+{
     SDL_Texture* background; /*!< Texture liée à l'image du fond de l'écran. */
     SDL_Texture* skin_ship; /*! apparence du vaisseau*/
     SDL_Texture* skin_ennemy; /*! apparende de l'ennemi*/
     SDL_Texture* missile; /*apparence du missile*/
 };
 
-
-/**
- * \brief Type qui correspond aux textures du jeu
-*/
-
 typedef struct textures_s textures_t;
+
+
 
 
 /**
@@ -41,6 +29,7 @@ typedef struct textures_s textures_t;
  * @param v la vitesse vertical du sprite 
  * 
  */
+
 struct sprite_s
 {
     /* data */
@@ -52,30 +41,25 @@ struct sprite_s
     int is_visible; 
 };
 
-
-/**
- * @brief type qui correspond aux entités du jeu
- * 
- */
 typedef struct sprite_s sprite_t;
-
-
 
 /**
  * \brief Représentation du monde du jeu
 */
 
-struct world_s{
+struct world_s
+{
     sprite_t ship;
     sprite_t ennemi;
     sprite_t missile;
-    
     int gameover; /*!< Champ indiquant si l'on est à la fin du jeu */
-
 };
 
-/**
- * \brief Type qui correspond aux données du monde
- */
-
 typedef struct world_s world_t;
+
+
+
+#endif
+
+
+

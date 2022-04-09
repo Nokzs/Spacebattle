@@ -6,7 +6,8 @@
  * \date 7 AVRIL 2022
  */
 
-
+#ifndef CONSTANTES_H
+#define CONSTANTES_H
 /**
  * \brief Largeur de l'écran de jeu
  */
@@ -37,4 +38,6 @@
 /**
  * @brief vitesse verticale du missile
  */
-#define MISSILE_SPEED 2
+#define MISSILE_SPEED 10
+
+#endif
