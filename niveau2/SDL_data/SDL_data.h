@@ -97,4 +97,24 @@ void init_sprite(sprite_t *sprite, int x, int y, int w, int h, int v);
 
 void apply_background(SDL_Renderer *renderer, textures_t *textures);
 
+/**
+ * @brief la fonction bloque le vaisseau sur la droite pour qu'il ne sorte pas de l'écran
+ * 
+ * @param sprite le vaisseau
+ */
+void right_limit(sprite_t* sprite);
+
+/**
+ * @brief la fonction bloque le vaisseau sur la gauche pour qu'il ne sorte pas de l'écran
+ * 
+ * @param sprite le vaisseau
+ */
+void left_limit(sprite_t* sprite);
+
+/**
+ * @brief fonction qui va repositionner l'ennemi en haut de l'ecran
+ * 
+ * @param sprite l'ennemi
+ */
+void bottom_limit(sprite_t* sprite);
 #endif

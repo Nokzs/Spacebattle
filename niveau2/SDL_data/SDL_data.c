@@ -6,7 +6,7 @@
  * \date 7 AVRIL 2022
  */
 
-
+#include "../constantes/constantes.h"
 #include "SDL_data.h"
 #include "../SDL2/sdl2-light.h"
 
@@ -42,6 +42,9 @@ void update_data(world_t *world){
     else{
          world->missile.x= world->ship.x+SHIP_SIZE/2-MISSILE_SIZE/2; /*!< sinon il doit être placer au dessus du vaisseau*/
     }
+    left_limit(&(world->ship));
+    right_limit(&(world->ship));
+    bottom_limit(&(world->ennemi));
 }
 
 void set_visible(sprite_t* sprite){
@@ -99,3 +102,19 @@ void init_sprite(sprite_t *sprite, int x, int y, int w, int h, int v){
     sprite->is_visible=1;
 }
 
+void left_limit(sprite_t* sprite){
+    if(sprite->x<=0){
+        sprite->x=0;
+    }
+}
+void right_limit(sprite_t* sprite){
+    if(sprite->x>=SCREEN_WIDTH-SHIP_SIZE){
+        sprite->x=SCREEN_WIDTH-SHIP_SIZE;
+    }
+}
+
+void bottom_limit(sprite_t* sprite){
+    if(sprite->y>=SCREEN_HEIGHT){
+        sprite->y=0;
+    }
+}
