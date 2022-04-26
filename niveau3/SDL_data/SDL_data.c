@@ -80,6 +80,7 @@ void handle_ennemies(world_t* world){
         set_invisible(&(world->enemies[i]));
         world->nb_enemies_survived++;
         world->nb_enemies_left--;
+        printf("%d",world->nb_enemies_left);
     }
     
 }
